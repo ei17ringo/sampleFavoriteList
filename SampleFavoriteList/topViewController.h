@@ -11,8 +11,10 @@
 @interface topViewController : UIViewController
 @property (weak, nonatomic) IBOutlet UIButton *nomallistBtn;
 @property (weak, nonatomic) IBOutlet UIButton *favlistBtn;
+@property (weak, nonatomic) IBOutlet UIButton *foodlistBtn;
 
 - (IBAction)tapNormal:(id)sender;
 - (IBAction)tapFavorite:(id)sender;
+- (IBAction)tapFood:(id)sender;
 
 @end

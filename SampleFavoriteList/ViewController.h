@@ -11,10 +11,15 @@
 @interface ViewController : UIViewController<UITableViewDataSource,UITableViewDelegate>
 {
     NSArray *_coffeeArray; //メンバ変数宣言
+    NSArray *_foodArray; //メンバ変数宣言
+    
+    NSArray *_useArray; //メンバ変数宣言
+    
 }
 
 
 @property (weak, nonatomic) IBOutlet UITableView *coffeeTableView;
+@property (nonatomic,assign) int select_num;
 
 
 @end

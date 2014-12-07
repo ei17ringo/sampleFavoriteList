@@ -17,6 +17,26 @@
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     
     NSArray *coffeeTmp;
+    NSArray *foodTmp;
+    
+    //保存されたデータを取り出す
+    foodTmp = [defaults objectForKey:@"foodTable"];
+    
+    if (foodTmp == nil) {
+        //一度も保存されていない場合はデフォルトリストを代入する
+        
+        //配列を使った場合
+        foodTmp = @[@{@"name":@"sisig",
+                        @"desc":@"説明sisig",
+                        @"favoriteflag":@"0"},
+                      @{@"name":@"dryed mango",@"desc":@"説明dryed mango",@"favoriteflag":@"0"},
+                      @{@"name":@"haroharo",@"desc":@"説明haroharo",@"favoriteflag":@"0"},
+                      @{@"name":@"jolibee",@"desc":@"説明jolibee",@"favoriteflag":@"0"}];
+    }
+    
+    _foodArray = foodTmp.mutableCopy;
+
+    
     
     //保存されたデータを取り出す
     coffeeTmp = [defaults objectForKey:@"coffeeTable"];
@@ -35,10 +55,17 @@
     
     _coffeeArray = coffeeTmp.mutableCopy;
     
-    self.coffeeTitle.text = [NSString stringWithFormat:@"%@とは",_coffeeArray[self.select_num][@"name"]];
-    self.descriptionText.text = _coffeeArray[self.select_num][@"desc"];
+    
+    if (self.select_button_num == 1) {
+        _useArray = _coffeeArray;
+    }else{
+        _useArray = _foodArray;
+    }
+    
+    self.coffeeTitle.text = [NSString stringWithFormat:@"%@とは",_useArray[self.select_num][@"name"]];
+    self.descriptionText.text = _useArray[self.select_num][@"desc"];
 
-    id favoriteflag = _coffeeArray[self.select_num][@"favoriteflag"];
+    id favoriteflag = _useArray[self.select_num][@"favoriteflag"];
     
     int intFavFlag = [favoriteflag intValue];
     
@@ -60,11 +87,11 @@
 - (IBAction)addFavoriteList:(id)sender {
     
     
-    NSDictionary *selectedCoffee = _coffeeArray[self.select_num];
+    NSDictionary *selectedCoffee = _useArray[self.select_num];
     
     NSMutableDictionary *changedCoffee = selectedCoffee.mutableCopy;
     
-    id favoriteflag = _coffeeArray[self.select_num][@"favoriteflag"];
+    id favoriteflag = _useArray[self.select_num][@"favoriteflag"];
     
     int intFavFlag = [favoriteflag intValue];
     
@@ -82,13 +109,21 @@
         
     }
     
-    [_coffeeArray replaceObjectAtIndex:self.select_num withObject:changedCoffee];
+    [_useArray replaceObjectAtIndex:self.select_num withObject:changedCoffee];
+    
+    
     
     //UserDefaultObjectを用意する
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     
     //文字を保存
-    [defaults setObject:_coffeeArray forKey:@"coffeeTable"];
+    if (self.select_button_num == 1) {
+        [defaults setObject:_useArray forKey:@"coffeeTable"];
+        
+    }else{
+        [defaults setObject:_useArray forKey:@"foodTable"];
+    
+    }
     [defaults synchronize];
 }
 

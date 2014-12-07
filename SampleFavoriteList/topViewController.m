@@ -38,7 +38,7 @@
 
 - (IBAction)tapNormal:(id)sender {
     ViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"ViewController"];
-    
+    vc.select_num = 1;
     
     //ナビゲーションコントローラーの機能で画面遷移
     [[self navigationController] pushViewController:vc animated:YES];
@@ -51,5 +51,13 @@
     //ナビゲーションコントローラーの機能で画面遷移
     [[self navigationController] pushViewController:fvc animated:YES];
 
+}
+
+- (IBAction)tapFood:(id)sender {
+    ViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"ViewController"];
+    vc.select_num = 2;
+    
+    //ナビゲーションコントローラーの機能で画面遷移
+    [[self navigationController] pushViewController:vc animated:YES];
 }
 @end

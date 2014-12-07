@@ -21,6 +21,16 @@
     
     _coffeeArray = @[@"ブルーマウンテン",@"キリマンジャロ",@"ブラジル",@"コロンビア"];
     
+    
+    _foodArray = @[@"sisig",@"dryed mango",@"haroharo",@"jolibee"];
+    
+    
+    if (self.select_num == 1) {
+        _useArray = _coffeeArray;
+    }else{
+        _useArray = _foodArray;
+    }
+    
     // NSLog(@"配列の中身の数:%d",_coffeeArray.count);
     
     _coffeeTableView.delegate = self;
@@ -30,7 +40,7 @@
 //行数を返す
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return _coffeeArray.count;
+    return _useArray.count;
 }
 
 //セルに文字を表示する
@@ -50,7 +60,7 @@
     
     //cell.textLabel.text = [NSString stringWithFormat:@"行番号=%d",indexPath.row];
     
-    cell.textLabel.text = _coffeeArray[indexPath.row];
+    cell.textLabel.text = _useArray[indexPath.row];
     
     return cell;
 }
@@ -64,6 +74,8 @@
     DetailViewController *dvc = [self.storyboard instantiateViewControllerWithIdentifier:@"DetailViewController"];
     
     dvc.select_num = indexPath.row;
+    
+    dvc.select_button_num = self.select_num;
     
     //ナビゲーションコントローラーの機能で画面遷移
     [[self navigationController] pushViewController:dvc animated:YES];

@@ -11,9 +11,14 @@
 @interface DetailViewController : UIViewController
 {
     NSMutableArray *_coffeeArray; //メンバ変数宣言
+    NSMutableArray *_foodArray; //メンバ変数宣言
+    NSMutableArray *_useArray; //メンバ変数宣言
+
 }
 
 @property (nonatomic,assign) int select_num;
+@property (nonatomic,assign) int select_button_num; //food or coffee number
+
 
 @property (weak, nonatomic) IBOutlet UILabel *coffeeTitle;
 
