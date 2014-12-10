@@ -22,6 +22,7 @@
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     
     NSArray *coffeeTmp;
+    NSArray *foodTmp;
     
     //保存されたデータを取り出す
     coffeeTmp = [defaults objectForKey:@"coffeeTable"];
@@ -37,11 +38,32 @@
                       @{@"name":@"コロンビア",@"desc":@"説明コロンビア",@"favoriteflag":@"0"}];
     }
     
+    //保存されたデータを取り出す
+    foodTmp = [defaults objectForKey:@"foodTable"];
+    
+    if (foodTmp == nil) {
+        //一度も保存されていない場合はデフォルトリストを代入する
+        
+        //配列を使った場合
+        foodTmp = @[@{@"name":@"sisig",
+                      @"desc":@"説明sisig",
+                      @"favoriteflag":@"0"},
+                    @{@"name":@"dryed mango",@"desc":@"説明dryed mango",@"favoriteflag":@"0"},
+                    @{@"name":@"haroharo",@"desc":@"説明haroharo",@"favoriteflag":@"0"},
+                    @{@"name":@"jolibee",@"desc":@"説明jolibee",@"favoriteflag":@"0"}];
+    }
+    
+    _foodArray = foodTmp.mutableCopy;
+    
+
+    
+    
     //検索用編集可能配列
     NSMutableArray *tmpcoffeeArray = coffeeTmp.mutableCopy;
+    NSMutableArray *tmpfoodArray = foodTmp.mutableCopy;
     
     
-    //お気に入りリスト（最初はお気に入りでないものも全て保存）
+    //お気に入りリスト珈琲（最初はお気に入りでないものも全て保存）
     _coffeeArray = coffeeTmp.mutableCopy;
     
     //お気に入りとして指定されているか、チェック後、おきにいりのものだけを残し、他は削除する
@@ -59,6 +81,28 @@
     }
     
     
+    //お気に入りリストフード（最初はお気に入りでないものも全て保存）
+    _foodArray = foodTmp.mutableCopy;
+    
+    //お気に入りとして指定されているか、チェック後、おきにいりのものだけを残し、他は削除する
+    for (NSDictionary *foodArray_each in tmpfoodArray) {
+        id favoriteflag = foodArray_each[@"favoriteflag"];
+        
+        //取り出したデータをint型に変換（if文で判定しやすいように)
+        int intFavFlag = [favoriteflag intValue];
+        
+        if (intFavFlag == 0) {
+            //お気に入り指定されてないので削除
+            [_foodArray removeObject:foodArray_each];
+        }
+        
+    }
+    
+    //重要：珈琲とフードのお気に入りを合体させる
+    _useArray = _coffeeArray.mutableCopy;
+    [_useArray addObjectsFromArray:_foodArray];
+    
+    
 
     
     _favoriteList.delegate = self;
@@ -69,7 +113,8 @@
 //行数を返す
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return _coffeeArray.count;
+    //return _coffeeArray.count;
+    return _useArray.count;
 }
 
 //セルに文字を表示する
@@ -89,7 +134,8 @@
     
     //cell.textLabel.text = [NSString stringWithFormat:@"行番号=%d",indexPath.row];
     
-    cell.textLabel.text = _coffeeArray[indexPath.row][@"name"];
+    //cell.textLabel.text = _coffeeArray[indexPath.row][@"name"];
+    cell.textLabel.text = _useArray[indexPath.row][@"name"];
     
     return cell;
 }
@@ -126,15 +172,55 @@
     }
 
     int index = 0;
+    BOOL checkFlag = NO;
     for (NSDictionary *coffeeArray_each in coffeeTmp) {
         NSString *name = coffeeArray_each[@"name"];
         
         //名前が同じモノが存在した場合、検索処理を中止する
-        if ([name isEqualToString:_coffeeArray[indexPath.row][@"name"]]) {
+        if ([name isEqualToString:_useArray[indexPath.row][@"name"]]) {
+            checkFlag = YES;
+            dvc.select_button_num = 1;
             break;
         }
         
         index++;
+    }
+    
+    //珈琲に存在しない場合、フードを検索する
+    if (!checkFlag) {
+        
+        NSArray *foodTmp;
+        
+        //保存されたデータを取り出す
+        foodTmp = [defaults objectForKey:@"foodTable"];
+        
+        
+        if (foodTmp == nil) {
+            //一度も保存されていない場合はデフォルトリストを代入する
+            //配列を使った場合
+            foodTmp = @[@{@"name":@"sisig",
+                          @"desc":@"説明sisig",
+                          @"favoriteflag":@"0"},
+                        @{@"name":@"dryed mango",@"desc":@"説明dryed mango",@"favoriteflag":@"0"},
+                        @{@"name":@"haroharo",@"desc":@"説明haroharo",@"favoriteflag":@"0"},
+                        @{@"name":@"jolibee",@"desc":@"説明jolibee",@"favoriteflag":@"0"}];
+        }
+        
+        index = 0;
+        checkFlag = NO;
+        for (NSDictionary *foodArray_each in foodTmp) {
+            NSString *name = foodArray_each[@"name"];
+            
+            //名前が同じモノが存在した場合、検索処理を中止する
+            if ([name isEqualToString:_useArray[indexPath.row][@"name"]]) {
+                checkFlag = YES;
+                dvc.select_button_num = 2;
+                break;
+            }
+            
+            index++;
+        }
+
     }
     
     //検索処理結果の番号を遷移先の画面に渡す

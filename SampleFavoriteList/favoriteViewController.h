@@ -11,6 +11,9 @@
 @interface favoriteViewController : UIViewController<UITableViewDataSource,UITableViewDelegate>
 {
     NSMutableArray *_coffeeArray; //メンバ変数宣言
+    NSMutableArray *_foodArray;
+    NSMutableArray *_useArray; //メンバ変数宣言
+
 }
 
 @property (weak, nonatomic) IBOutlet UITableView *favoriteList;
